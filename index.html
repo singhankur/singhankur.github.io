@@ -779,13 +779,7 @@
     <button class="chat-close" onclick="toggleChat()">✕</button>
   </div>
   <div class="chat-messages" id="chatMessages">
-    <div class="chat-msg bot">Hi! I'm Ankur's AI assistant. Ask me anything about his experience, projects, or skills. 👋</div>
-  </div>
-  <div class="chat-suggestions" id="chatSuggestions">
-    <button class="chat-suggestion" onclick="askSuggestion(this)">What GenAI work has Ankur done?</button>
-    <button class="chat-suggestion" onclick="askSuggestion(this)">Tell me about his patent</button>
-    <button class="chat-suggestion" onclick="askSuggestion(this)">What's his tech stack?</button>
-    <button class="chat-suggestion" onclick="askSuggestion(this)">What teams has he led?</button>
+    <div class="chat-msg bot">👋 Hey there! I'm Ankur's AI assistant.<br><br>Here are a few things I can help with:<br><br>💬 <strong>Say Hi</strong> — just type "Hi"<br>📱 <strong>Get this page on your phone</strong> — ask me to send the link<br>📧 <strong>Get Ankur's email</strong> — ask for his contact<br>📅 <strong>Book a meeting</strong> — I'll share his calendar link<br><br>Or ask me anything about his work!</div>
   </div>
   <div class="chat-input-row">
     <input class="chat-input" id="chatInput" type="text" placeholder="Ask something..." onkeydown="if(event.key==='Enter') sendMessage()" />
@@ -794,15 +788,13 @@
 </div>
 
 <script>
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('chatWindow').classList.add('open'), 800);
+  });
+
   function toggleChat() {
     const w = document.getElementById('chatWindow');
     w.classList.toggle('open');
-  }
-
-  function askSuggestion(btn) {
-    document.getElementById('chatInput').value = btn.textContent;
-    document.getElementById('chatSuggestions').style.display = 'none';
-    sendMessage();
   }
 
   async function sendMessage() {
