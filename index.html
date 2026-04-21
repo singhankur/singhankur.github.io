@@ -153,6 +153,65 @@
   .contact-link svg { width: 18px; height: 18px; }
 
   /* FOOTER */
+  /* CHATBOT */
+  .chat-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 999;
+    width: 56px; height: 56px; border-radius: 50%; background: var(--green);
+    border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(26,107,90,0.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .chat-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(26,107,90,0.5); }
+  .chat-fab svg { width: 26px; height: 26px; fill: white; }
+  .chat-window {
+    position: fixed; bottom: 96px; right: 28px; z-index: 998;
+    width: 360px; max-height: 520px; background: var(--white);
+    border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+    display: none; flex-direction: column; overflow: hidden;
+  }
+  .chat-window.open { display: flex; }
+  .chat-header {
+    background: linear-gradient(135deg, #0d3d30, #1a6b5a);
+    padding: 14px 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .chat-header-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .chat-header-text { flex: 1; }
+  .chat-header-name { font-size: 0.9rem; font-weight: 700; color: #fff; }
+  .chat-header-status { font-size: 0.72rem; color: rgba(255,255,255,0.65); }
+  .chat-close { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 1.2rem; padding: 0; }
+  .chat-messages {
+    flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    min-height: 280px; max-height: 340px;
+  }
+  .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.5; }
+  .chat-msg.bot { background: var(--light); color: var(--dark); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .chat-msg.user { background: var(--green); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .chat-msg.typing { color: var(--gray); font-style: italic; }
+  .chat-suggestions { padding: 0 12px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chat-suggestion {
+    background: var(--light); border: 1px solid var(--border); color: var(--green);
+    font-size: 0.75rem; font-weight: 600; padding: 5px 10px; border-radius: 20px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .chat-suggestion:hover { background: var(--green-light); }
+  .chat-input-row { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--border); }
+  .chat-input {
+    flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px;
+    font-size: 0.875rem; outline: none; font-family: inherit;
+  }
+  .chat-input:focus { border-color: var(--green); }
+  .chat-send {
+    background: var(--green); color: white; border: none; border-radius: 8px;
+    padding: 8px 14px; cursor: pointer; font-size: 0.875rem; font-weight: 600;
+    transition: background 0.2s;
+  }
+  .chat-send:hover { background: var(--green-mid); }
+  .chat-send:disabled { background: #ccc; cursor: not-allowed; }
+
   footer { background: var(--dark); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.8rem; }
 
   @media (max-width: 640px) {
@@ -704,6 +763,87 @@
     </div>
   </div>
 </section>
+
+<!-- CHATBOT FAB -->
+<button class="chat-fab" onclick="toggleChat()" title="Ask me anything about Ankur">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+</button>
+
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-avatar">🤖</div>
+    <div class="chat-header-text">
+      <div class="chat-header-name">Ask Ankur</div>
+      <div class="chat-header-status">AI assistant · Powered by Groq</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Hi! I'm Ankur's AI assistant. Ask me anything about his experience, projects, or skills. 👋</div>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button class="chat-suggestion" onclick="askSuggestion(this)">What GenAI work has Ankur done?</button>
+    <button class="chat-suggestion" onclick="askSuggestion(this)">Tell me about his patent</button>
+    <button class="chat-suggestion" onclick="askSuggestion(this)">What's his tech stack?</button>
+    <button class="chat-suggestion" onclick="askSuggestion(this)">What teams has he led?</button>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Ask something..." onkeydown="if(event.key==='Enter') sendMessage()" />
+    <button class="chat-send" id="chatSend" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  function toggleChat() {
+    const w = document.getElementById('chatWindow');
+    w.classList.toggle('open');
+  }
+
+  function askSuggestion(btn) {
+    document.getElementById('chatInput').value = btn.textContent;
+    document.getElementById('chatSuggestions').style.display = 'none';
+    sendMessage();
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const messages = document.getElementById('chatMessages');
+    const sendBtn = document.getElementById('chatSend');
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Add user message
+    messages.innerHTML += `<div class="chat-msg user">${escapeHtml(text)}</div>`;
+    input.value = '';
+    sendBtn.disabled = true;
+
+    // Typing indicator
+    const typingId = 'typing-' + Date.now();
+    messages.innerHTML += `<div class="chat-msg bot typing" id="${typingId}">Thinking...</div>`;
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      });
+      const data = await res.json();
+      document.getElementById(typingId).remove();
+      messages.innerHTML += `<div class="chat-msg bot">${escapeHtml(data.reply)}</div>`;
+    } catch (e) {
+      document.getElementById(typingId).remove();
+      messages.innerHTML += `<div class="chat-msg bot">Sorry, something went wrong. Try again!</div>`;
+    }
+
+    sendBtn.disabled = false;
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function escapeHtml(text) {
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
 
 <footer>
   <p>© 2026 Ankur Kumar Singh · Built with passion · <a href="https://github.com/singhankur/singhankur.github.io" style="color:rgba(255,255,255,0.5);text-decoration:none;">View Source</a></p>
