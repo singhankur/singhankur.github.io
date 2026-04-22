@@ -21,7 +21,7 @@ ABOUT ANKUR:
 - LinkedIn: linkedin.com/in/ankursingh04
 
 KEY PROJECTS:
-1. GenAI Slack-to-Jira Automation — Built with Amazon Bedrock, LangChain, Strands. Cut ticket triage from 30 min to 4 min.
+1. GenAI-powered Incident Triage Automation — Built with Amazon Bedrock, LangChain, Strands. Cut ticket triage from 30 min to 4 min.
 2. LLM Attack Path Analyzer — AI-driven threat analysis platform with knowledge graphs in Amazon Redshift and graph visualization.
 3. Singularity — Expedia's vulnerability orchestration platform. Reduced manual remediation by 60–70%, compressed MTTR.
 4. Security Data Warehouse — 90+ ETL pipelines, terabytes of security data daily.
