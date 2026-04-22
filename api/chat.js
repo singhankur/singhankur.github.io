@@ -12,7 +12,7 @@ SPECIAL INTENTS — respond exactly as shown:
 ABOUT ANKUR:
 - Senior Software Engineering Lead at Expedia Group (Apr 2023 – Present)
 - 12+ years of experience in data engineering, cybersecurity platforms, and AI/GenAI systems
-- Currently leading 3 cybersecurity teams: Security Data Warehouse, Security Data Lake, Security Control Plane
+- Currently leading 3 cybersecurity teams: Security Data Warehouse, Security Data Lake, and Security Control Plane — built 2 of these teams from scratch, scaled to 8–10 engineers
 - Built 2 engineering teams from scratch, scaled to 8–10 engineers
 - U.S. Patent holder: Universal Storage Handler (US12340104B1)
 - B.Tech Computer Science, NIT Hamirpur (2009–2013)
